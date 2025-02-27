@@ -1,97 +1,268 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# @plutoxyz/react-native-sdk
 
-# Getting Started
+A React Native wrapper for the PlutoSwiftSDK that enables Pluto proof generation and attestation capabilities in React Native applications.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+> **Note:** This module currently supports iOS only. Android support is planned for future releases.
 
-## Step 1: Start Metro
+## Installation
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
-
-To start the Metro dev server, run the following command from the root of your React Native project:
-
-```sh
+```bash
 # Using npm
-npm start
+npm install @plutoxyz/react-native-sdk
 
-# OR using Yarn
-yarn start
+# Using yarn
+yarn add @plutoxyz/react-native-sdk
 ```
 
-## Step 2: Build and run your app
+### iOS Setup
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+After installing the package, run pod install in your iOS directory:
 
-### Android
-
-```sh
-# Using npm
-npm run android
-
-# OR using Yarn
-yarn android
+```bash
+cd ios && pod install
 ```
 
-### iOS
+That's it! The SDK uses auto-linking to automatically set up the necessary native dependencies.
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+## Features
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+- **RequestBuilder**: A component for building and customizing requests with browser-based user interaction
+- **ProofGenerator**: A component that combines RequestBuilder with proof generation
+- **Direct API functions**: For programmatic proof generation
 
-```sh
-bundle install
+## Platform Support
+
+| Platform | Support Status                                     |
+| -------- | -------------------------------------------------- |
+| iOS      | ✅ Fully Supported                                 |
+| Android  | ❌ Not yet supported (planned for future releases) |
+
+When used in an Android application, all methods and components will gracefully throw errors with clear messages indicating the lack of Android support. This ensures your cross-platform app doesn't crash, but you'll need to implement platform-specific logic to handle these cases.
+
+```typescript
+// Example of platform-specific usage
+import { Platform } from "react-native";
+import { ProofGenerator } from "@plutoxyz/react-native-sdk";
+
+// Only use the component on iOS
+{
+  Platform.OS === "ios" && (
+    <ProofGenerator
+      manifestUrl="https://example.com/manifest.json"
+      onProofGenerated={(proof) => {
+        console.log("Proof generated:", proof);
+      }}
+      onError={(error) => {
+        console.error("Error:", error);
+      }}
+    />
+  );
+}
 ```
 
-Then, and every time you update your native dependencies, run:
+## Usage
 
-```sh
-bundle exec pod install
+### Basic Proof Generation
+
+```typescript
+import { generateProofFromUrl } from "@plutoxyz/react-native-sdk";
+
+// Generate a proof from a manifest URL
+const generateProof = async () => {
+  try {
+    const manifestUrl = "https://example.com/manifest.json";
+    const proof = await generateProofFromUrl(manifestUrl);
+    console.log("Proof generated:", proof);
+  } catch (error) {
+    console.error("Error generating proof:", error);
+  }
+};
 ```
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+### Using the RequestBuilder Component
 
-```sh
-# Using npm
+```typescript
+import { RequestBuilder } from "@plutoxyz/react-native-sdk";
+
+// In your component:
+<RequestBuilder
+  manifestUrl="https://example.com/manifest.json"
+  onManifestConstructed={(manifest) => {
+    console.log("Manifest constructed:", manifest);
+    // Use the manifest for further operations
+  }}
+  onError={(error) => {
+    console.error("Error:", error);
+  }}
+/>;
+```
+
+### Using the ProofGenerator Component
+
+```typescript
+import { ProofGenerator } from "@plutoxyz/react-native-sdk";
+
+// In your component:
+<ProofGenerator
+  manifestUrl="https://example.com/manifest.json"
+  onProofGenerated={(proof) => {
+    console.log("Proof generated:", proof);
+    // Use the proof
+  }}
+  onError={(error) => {
+    console.error("Error:", error);
+  }}
+  timeout={60000} // Optional timeout in milliseconds
+/>;
+```
+
+## API Reference
+
+### Components
+
+#### RequestBuilder
+
+| Prop                  | Type                             | Required | Description                              |
+| --------------------- | -------------------------------- | -------- | ---------------------------------------- |
+| manifest              | ManifestFile                     | No       | A manifest object                        |
+| manifestUrl           | string                           | No       | URL to fetch manifest from               |
+| prepareJS             | string                           | No       | JavaScript code for preparation          |
+| onManifestConstructed | (manifest: ManifestFile) => void | Yes      | Callback when manifest is constructed    |
+| onError               | (error: Error) => void           | No       | Error callback                           |
+| timeout               | number                           | No       | Timeout in milliseconds (default: 60000) |
+
+#### ProofGenerator
+
+| Prop                  | Type                             | Required | Description                              |
+| --------------------- | -------------------------------- | -------- | ---------------------------------------- |
+| manifest              | ManifestFile                     | No       | A manifest object                        |
+| manifestUrl           | string                           | No       | URL to fetch manifest from               |
+| prepareJS             | string                           | No       | JavaScript code for preparation          |
+| onProofGenerated      | (proof: string) => void          | Yes      | Callback when proof is generated         |
+| onError               | (error: Error) => void           | No       | Error callback                           |
+| onManifestConstructed | (manifest: ManifestFile) => void | No       | Callback when manifest is constructed    |
+| timeout               | number                           | No       | Timeout in milliseconds (default: 60000) |
+
+### Functions
+
+| Function             | Parameters               | Returns         | Description                              |
+| -------------------- | ------------------------ | --------------- | ---------------------------------------- |
+| generateProof        | (manifest: ManifestFile) | Promise<string> | Generates a proof from a manifest object |
+| generateProofFromUrl | (url: string)            | Promise<string> | Generates a proof from a manifest URL    |
+
+## For Developers
+
+### Directory Structure
+
+- **src/**: Source code for the library
+
+  - **components/**: React components
+    - `RequestBuilder.tsx`: Wrapper for the Swift RequestBuilder
+    - `ProofGenerator.tsx`: Component that combines RequestBuilder with proof generation
+  - **bridge/**: Native bridging code
+    - `NativeBridge.tsx`: Bridge functions to the Swift SDK
+  - **types/**: TypeScript type definitions
+  - **index.ts**: Main entry point that exports everything
+
+- **example/**: Example/test app
+
+  - `App.tsx`: Test application for the library
+
+- **ios/**: iOS native code
+  - `PLUTO_SWIFT_SDK/`: Reference files from the PlutoSwiftSDK pod
+
+### Contributing
+
+Contributions are welcome! Here's how you can contribute to this project:
+
+1. **Fork the repository**
+2. **Clone your fork**:
+   ```bash
+   git clone https://github.com/your-username/react-native-pluto-sdk.git
+   cd react-native-pluto-sdk
+   ```
+3. **Install dependencies**:
+   ```bash
+   npm install
+   ```
+4. **Create a feature branch**:
+   ```bash
+   git checkout -b feature/amazing-feature
+   ```
+5. **Make your changes and commit them**:
+   ```bash
+   git commit -m 'Add some amazing feature'
+   ```
+6. **Push to the branch**:
+   ```bash
+   git push origin feature/amazing-feature
+   ```
+7. **Open a Pull Request**
+
+Please make sure your code follows the existing style and include appropriate tests.
+
+### Building and Testing
+
+To build the library:
+
+```bash
+npm run build
+```
+
+To run tests:
+
+```bash
+npm test
+```
+
+To try the example app:
+
+```bash
+# Navigate to the example directory
+cd example
+# Install dependencies
+npm install
+# Run the app on iOS
 npm run ios
-
-# OR using Yarn
-yarn ios
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+### Releasing
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+This library uses [release-it](https://github.com/release-it/release-it) to manage releases with automatic versioning and changelog generation.
 
-## Step 3: Modify your app
+To release a new version:
 
-Now that you have successfully run the app, let's make changes!
+1. **Make sure all changes are committed and pushed**
+2. **Update the CHANGELOG.md file**:
+   - Add a new section for the upcoming version at the top of the file
+   - Document all notable changes under appropriate categories (Added, Changed, Fixed, etc.)
+   - Follow the [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) format
+3. **Commit the changelog update**:
+   ```bash
+   git add CHANGELOG.md
+   git commit -m 'Update changelog for version X.Y.Z'
+   ```
+4. **Run the release command**:
+   ```bash
+   npm run release
+   ```
+5. **Follow the prompts to choose the version type** (major, minor, patch, or prerelease)
+6. **The tool will automatically**:
+   - Bump the version in package.json
+   - Create a git tag
+   - Push to GitHub
+   - Publish to npm
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+For a prerelease version (alpha/beta):
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+```bash
+# For alpha releases
+npm run release -- --preRelease=alpha
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+# For beta releases
+npm run release -- --preRelease=beta
+```
 
-## Congratulations! :tada:
+## License
 
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

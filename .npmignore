@@ -1,0 +1,33 @@
+# Development files
+.git
+.github
+.gitignore
+.vscode
+.eslintrc
+.prettierrc
+.babelrc
+
+# Build configs
+tsconfig.json
+babel.config.js
+metro.config.js
+jest.config.js
+
+# Example app and tests
+example/
+__tests__/
+node_modules/
+coverage/
+
+# Development dependencies
+.yarn/
+.DS_Store
+
+# CI/CD
+.circleci/
+.travis.yml
+
+# Logs
+logs/
+*.log
+npm-debug.log*
