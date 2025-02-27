@@ -33,7 +33,7 @@
     "clean": "del-cli lib",
     "build": "bob build",
     "release": "release-it",
-    "prepublishOnly": "npm run lint && npm run build"
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "react": "19.0.0",
