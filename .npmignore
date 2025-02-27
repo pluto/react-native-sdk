@@ -31,3 +31,81 @@ coverage/
 logs/
 *.log
 npm-debug.log*
+
+# Build and dependency directories
+ios/Pods/
+ios/build/
+android/build/
+android/.gradle/
+
+# Other files
+.DS_Store
+node_modules/
+npm-debug.log
+yarn-error.log
+.idea/
+.gradle/
+*.iml
+.vscode/
+
+# OSX
+.DS_Store
+
+# Xcode
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata
+*.xccheckout
+*.moved-aside
+DerivedData
+*.hmap
+*.ipa
+*.xcuserstate
+ios/.xcode.env.local
+ios/build
+ios/Pods
+
+# Android/IntelliJ
+android/build
+android/app/build
+android/.gradle
+android/.idea
+android/local.properties
+android/*.iml
+.gradle
+.idea
+*.iml
+*.hprof
+
+# Node
+node_modules
+npm-debug.log
+yarn-error.log
+
+# Testing
+coverage
+__tests__
+
+# Example
+example
+
+# Build files
+dist
+
+# BUCK
+buck-out
+\.buckd
+
+# Bundle artifact
+*.jsbundle
+
+# Configuration
+.circleci
+.github
+.vscode
