@@ -1,111 +1,52 @@
-# Development files
-.git
-.github
+# Development/tooling files
+.git/
+.github/
 .gitignore
-.vscode
+.vscode/
 .eslintrc
 .prettierrc
 .babelrc
-
-# Build configs
 tsconfig.json
 babel.config.js
 metro.config.js
 jest.config.js
+.travis.yml
+.circleci/
+.idea/
 
-# Example app and tests
+# Examples and tests
 example/
 __tests__/
-node_modules/
 coverage/
 
-# Development dependencies
-.yarn/
-.DS_Store
+# Build artifacts
+ios/.xcode.env
+ios/.xcode.env.local
+ios/build/
+ios/Pods/
+ios/Podfile.lock
+ios/*.xcworkspace/
+ios/*.xcworkspace/contents.xcworkspacedata
+ios/*.xcodeproj/xcuserdata/
+ios/**/*.xcuserstate
 
-# CI/CD
-.circleci/
-.travis.yml
+android/build/
+android/.gradle/
+android/gradle/
+android/gradlew
+android/gradlew.bat
+android/local.properties
 
 # Logs
 logs/
 *.log
 npm-debug.log*
-
-# Build and dependency directories
-ios/Pods/
-ios/build/
-android/build/
-android/.gradle/
-
-# Other files
-.DS_Store
-node_modules/
-npm-debug.log
 yarn-error.log
-.idea/
-.gradle/
-*.iml
-.vscode/
-
-# OSX
-.DS_Store
-
-# Xcode
-*.pbxuser
-!default.pbxuser
-*.mode1v3
-!default.mode1v3
-*.mode2v3
-!default.mode2v3
-*.perspectivev3
-!default.perspectivev3
-xcuserdata
-*.xccheckout
-*.moved-aside
-DerivedData
-*.hmap
-*.ipa
-*.xcuserstate
-ios/.xcode.env.local
-ios/build
-ios/Pods
-
-# Android/IntelliJ
-android/build
-android/app/build
-android/.gradle
-android/.idea
-android/local.properties
-android/*.iml
-.gradle
-.idea
-*.iml
-*.hprof
 
 # Node
-node_modules
-npm-debug.log
-yarn-error.log
+node_modules/
 
-# Testing
-coverage
-__tests__
-
-# Example
-example
-
-# Build files
-dist
-
-# BUCK
-buck-out
-\.buckd
-
-# Bundle artifact
+# Misc
+.DS_Store
 *.jsbundle
-
-# Configuration
-.circleci
-.github
-.vscode
+dist/
