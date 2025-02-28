@@ -43,7 +43,7 @@
     "clean": "del-cli lib",
     "build": "bob build",
     "release": "release-it",
-    "prepublishOnly": "npm run prepublish-cleanup && npm run build",
+    "prepublishOnly": "npm run build",
     "package-check": "npm pack --dry-run"
   },
   "dependencies": {
