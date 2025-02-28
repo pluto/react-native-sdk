@@ -266,3 +266,115 @@ npm run release -- --preRelease=beta
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## ProofGenerator Component
+
+The `ProofGenerator` component can be used to generate proofs based on a manifest file or URL.
+
+```tsx
+import React, { useState } from "react";
+import { View, Button, Text } from "react-native";
+import { ProofGenerator } from "@plutoxyz/react-native-sdk";
+
+const MyProofComponent = () => {
+  const [proof, setProof] = useState(null);
+  const [isGenerating, setIsGenerating] = useState(false);
+
+  const handleStartProofGeneration = () => {
+    setIsGenerating(true);
+  };
+
+  const handleProofGenerated = (generatedProof) => {
+    setProof(generatedProof);
+    setIsGenerating(false);
+  };
+
+  const handleError = (error) => {
+    console.error("Proof generation error:", error);
+    setIsGenerating(false);
+  };
+
+  return (
+    <View>
+      <Button
+        title="Generate Proof"
+        onPress={handleStartProofGeneration}
+        disabled={isGenerating}
+      />
+
+      {isGenerating && (
+        <ProofGenerator
+          manifestUrl="https://example.com/your-manifest-url"
+          onProofGenerated={handleProofGenerated}
+          onError={handleError}
+          timeout={60000} // Optional: 60 second timeout
+        />
+      )}
+
+      {proof && <Text>Proof Generated: {proof.substring(0, 50)}...</Text>}
+    </View>
+  );
+};
+```
+
+### Important Notes
+
+1. Always import React with `import * as React from 'react'` or `import React from 'react'` in your component files to avoid "Cannot read property 'useState' of null" errors.
+
+2. The ProofGenerator component is not supported on Android yet.
+
+3. Make sure you provide at least one of:
+
+   - `manifest`: A manifest object
+   - `manifestUrl`: URL to fetch a manifest from
+
+4. Always provide the required callbacks:
+
+   - `onProofGenerated`: Called when a proof is successfully generated
+   - `onError` (optional but recommended): Called when an error occurs
+
+5. Make sure your React Native project includes the necessary permissions for network requests.
+
+## Troubleshooting
+
+### "Cannot read property 'useState' of null"
+
+This error usually occurs when React is not properly imported or available in your component. Make sure to import React correctly:
+
+```tsx
+import * as React from "react";
+// or
+import React from "react";
+```
+
+### TypeScript Errors with ProofGenerator
+
+If you encounter TypeScript errors like:
+
+```
+'ProofGenerator' cannot be used as a JSX component.
+Its type 'FC<ProofGeneratorProps>' is not a valid JSX element type.
+```
+
+Make sure you are using a compatible version of React and React Native with this library. The library requires:
+
+- React 16.8+ (for Hooks support)
+- React Native 0.60+
+
+### Component Not Found
+
+If you encounter errors importing the component, make sure the library is properly installed and linked in your project.
+
+## API Reference
+
+### ProofGenerator Props
+
+| Prop                  | Type                             | Required | Description                                     |
+| --------------------- | -------------------------------- | -------- | ----------------------------------------------- |
+| manifest              | ManifestFile                     | No       | The manifest object to use for proof generation |
+| manifestUrl           | string                           | No       | URL to fetch a manifest from                    |
+| prepareJS             | string                           | No       | JavaScript to prepare the manifest data         |
+| onProofGenerated      | (proof: string) => void          | Yes      | Callback when a proof is successfully generated |
+| onError               | (error: Error) => void           | No       | Callback when an error occurs                   |
+| onManifestConstructed | (manifest: ManifestFile) => void | No       | Callback when a manifest is constructed         |
+| timeout               | number                           | No       | Timeout in milliseconds (default: 60000)        |

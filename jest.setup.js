@@ -11,6 +11,11 @@ jest.mock("react-native", () => ({
         .mockResolvedValue({ proof: "mock-proof", publicInputs: ["input1"] }),
     },
   },
+  // Add Platform mock
+  Platform: {
+    OS: "ios",
+    select: jest.fn((obj) => obj.ios),
+  },
   // Add anything else you absolutely need here
   StyleSheet: {
     create: (styles) => styles,

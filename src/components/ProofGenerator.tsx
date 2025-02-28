@@ -1,5 +1,5 @@
 import { NativeModules } from "react-native";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   View,
   ActivityIndicator,
@@ -9,11 +9,8 @@ import {
 } from "react-native";
 import { ManifestFile } from "../types";
 import { RequestBuilder } from "./RequestBuilder";
-import { generateProof } from "../bridge/NativeBridge";
 
 const { PlutoProver } = NativeModules;
-
-// ProofGenerator component props
 interface ProofGeneratorProps {
   manifest?: ManifestFile;
   manifestUrl?: string;
@@ -28,7 +25,7 @@ interface ProofGeneratorProps {
  * ProofGenerator component
  * Combines RequestBuilder with proof generation
  */
-export const ProofGenerator: React.FC<ProofGeneratorProps> = ({
+export const ProofGenerator = ({
   manifest,
   manifestUrl,
   prepareJS,
@@ -36,7 +33,7 @@ export const ProofGenerator: React.FC<ProofGeneratorProps> = ({
   onError,
   onManifestConstructed,
   timeout = 60000, // Default 60 second timeout
-}) => {
+}: ProofGeneratorProps) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [stage, setStage] = useState<"constructing" | "generating">(
@@ -46,7 +43,7 @@ export const ProofGenerator: React.FC<ProofGeneratorProps> = ({
     useState<ManifestFile | null>(null);
 
   useEffect(() => {
-    if (Platform.OS === "android") {
+    if (Platform?.OS === "android") {
       console.warn("ProofGenerator is not supported on Android yet.");
       onError &&
         onError(new Error("ProofGenerator is not supported on Android yet."));
@@ -83,7 +80,7 @@ export const ProofGenerator: React.FC<ProofGeneratorProps> = ({
     }
 
     // Start generating the proof
-    generateProof(newManifest);
+    generateProofInternal(newManifest);
   };
 
   // Handle errors from RequestBuilder
@@ -97,7 +94,7 @@ export const ProofGenerator: React.FC<ProofGeneratorProps> = ({
   };
 
   // Generate proof with the constructed manifest
-  const generateProof = async (manifest: ManifestFile) => {
+  const generateProofInternal = async (manifest: ManifestFile) => {
     try {
       const proofResult = await PlutoProver.generateProof(manifest);
       setLoading(false);

@@ -47,11 +47,15 @@
     "package-check": "npm pack --dry-run"
   },
   "dependencies": {
-    "react": "19.0.0",
-    "react-native": "0.78.0",
     "react-native-webview": "^13.13.2"
   },
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-native": ">=0.60.0"
+  },
   "devDependencies": {
+    "react": "19.0.0",
+    "react-native": "0.78.0",
     "@babel/core": "^7.25.2",
     "@babel/preset-env": "^7.25.3",
     "@babel/runtime": "^7.25.0",

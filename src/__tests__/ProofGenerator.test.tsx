@@ -1,5 +1,5 @@
 import { ProofGenerator } from "../components/ProofGenerator";
-import React from "react";
+import * as React from "react";
 import { ManifestFile, Methods } from "../types";
 import { NativeModules } from "react-native";
 

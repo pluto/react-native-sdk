@@ -1,7 +1,6 @@
 import { NativeModules, Platform } from "react-native";
 import { ManifestFile } from "../types";
 import { RequestBuilder } from "../components/RequestBuilder";
-import { ProofGenerator } from "../components/ProofGenerator";
 
 const { PlutoProver } = NativeModules;
 
@@ -20,4 +19,4 @@ export const generateProofFromUrl = async (url: string) => {
 };
 
 // Export RequestBuilder component
-export { RequestBuilder, ProofGenerator };
+export { RequestBuilder };

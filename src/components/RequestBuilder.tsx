@@ -21,14 +21,14 @@ interface RequestBuilderProps {
   timeout?: number;
 }
 
-export const RequestBuilder: React.FC<RequestBuilderProps> = ({
+export const RequestBuilder = ({
   manifest,
   manifestUrl,
   prepareJS = "",
   onManifestConstructed,
   onError,
   timeout = 60000,
-}) => {
+}: RequestBuilderProps) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
