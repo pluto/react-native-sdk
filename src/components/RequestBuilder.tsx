@@ -44,6 +44,12 @@ export const RequestBuilder = ({
       try {
         // If we already have a manifest, use it
         if (manifest) {
+          if (!manifest.prepareUrl) {
+            setLoading(false);
+            onManifestConstructed(manifest);
+            return;
+          }
+
           showBrowserView(manifest);
           return;
         }
@@ -55,6 +61,12 @@ export const RequestBuilder = ({
             const response = await fetch(manifestUrl);
             const manifestData = await response.json();
             const fetchedManifest = manifestData as ManifestFile;
+
+            if (!fetchedManifest.prepareUrl) {
+              setLoading(false);
+              onManifestConstructed(fetchedManifest);
+              return;
+            }
 
             // Try to fetch prepare.js if it exists and none was provided
             if (!prepareJS) {

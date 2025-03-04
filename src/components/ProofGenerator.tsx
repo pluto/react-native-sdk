@@ -39,6 +39,7 @@ export const ProofGenerator = ({
   const [stage, setStage] = useState<"constructing" | "generating">(
     "constructing"
   );
+
   const [constructedManifest, setConstructedManifest] =
     useState<ManifestFile | null>(null);
 
