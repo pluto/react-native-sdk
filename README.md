@@ -4,6 +4,11 @@ A React Native wrapper for the PlutoSwiftSDK that enables Pluto proof generation
 
 > **Note:** This module currently supports iOS only. Android support is planned for future releases.
 
+## Requirements
+
+- React Native 0.60.0 or higher
+- iOS 17.0 or higher
+
 ## Installation
 
 ```bash
@@ -26,7 +31,7 @@ That's it! The SDK uses auto-linking to automatically set up the necessary nativ
 
 ## Documentation
 
-Full documentation is available in the [docs](./docs) directory:
+Full documentation is available in the [docs](./docs/index.md) directory:
 
 ### Components
 

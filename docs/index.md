@@ -2,11 +2,6 @@
 
 The Pluto React Native SDK provides components and functions for generating proofs in React Native applications.
 
-## Requirements
-
-- React Native 0.60.0 or higher
-- iOS 17.0 or higher
-
 ## Installation
 
 To use any of the components or functions in this SDK, install the package:
