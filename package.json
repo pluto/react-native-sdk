@@ -1,6 +1,6 @@
 {
   "name": "@plutoxyz/react-native-sdk",
-  "version": "0.0.2-alpha.2",
+  "version": "0.0.2-alpha.3",
   "description": "React Native wrapper for PlutoSwiftSDK",
   "license": "MIT",
   "main": "lib/commonjs/index.js",
