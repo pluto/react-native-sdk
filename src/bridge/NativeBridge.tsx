@@ -18,5 +18,4 @@ export const generateProofFromUrl = async (url: string) => {
   return PlutoProver.generateProofFromUrl(url);
 };
 
-// Export RequestBuilder component
 export { RequestBuilder };

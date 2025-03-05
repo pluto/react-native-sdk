@@ -11,7 +11,11 @@ import { ManifestFile } from "../types";
 
 const { PlutoProver } = NativeModules;
 
-// RequestBuilder as a React component
+/**
+ * Handles the construction and processing of manifest requests by managing browser view interactions.
+ * Can either use a provided manifest directly or fetch one from a URL. Automatically attempts to
+ * locate and fetch a prepare.js file if one is not provided but is needed.
+ */
 interface RequestBuilderProps {
   manifest?: ManifestFile;
   manifestUrl?: string;
@@ -42,7 +46,6 @@ export const RequestBuilder = ({
 
     const loadManifest = async () => {
       try {
-        // If we already have a manifest, use it
         if (manifest) {
           if (!manifest.prepareUrl) {
             setLoading(false);
@@ -54,10 +57,8 @@ export const RequestBuilder = ({
           return;
         }
 
-        // If we have a manifestUrl, fetch the manifest
         if (manifestUrl) {
           try {
-            // Fetch the manifest JSON
             const response = await fetch(manifestUrl);
             const manifestData = await response.json();
             const fetchedManifest = manifestData as ManifestFile;
@@ -68,7 +69,6 @@ export const RequestBuilder = ({
               return;
             }
 
-            // Try to fetch prepare.js if it exists and none was provided
             if (!prepareJS) {
               try {
                 // Construct prepare.js URL by replacing manifest filename with prepare.js
@@ -78,15 +78,12 @@ export const RequestBuilder = ({
                 const prepareJsResponse = await fetch(prepareJsUrl);
                 const fetchedPrepareJS = await prepareJsResponse.text();
 
-                // Show browser view with fetched manifest and prepare.js
                 showBrowserView(fetchedManifest, fetchedPrepareJS);
               } catch (prepareJsError) {
-                // Silently ignore if prepare.js doesn't exist
-                // Show browser view with just the fetched manifest
+                // Silently continue if prepare.js doesn't exist - it's optional
                 showBrowserView(fetchedManifest);
               }
             } else {
-              // Show browser view with fetched manifest and provided prepare.js
               showBrowserView(fetchedManifest, prepareJS);
             }
           } catch (fetchError) {
@@ -114,7 +111,6 @@ export const RequestBuilder = ({
   }, [manifest, manifestUrl, prepareJS, onManifestConstructed, onError]);
 
   useEffect(() => {
-    // Set a timeout to prevent hanging indefinitely
     const timeoutId = setTimeout(() => {
       if (loading) {
         setLoading(false);
@@ -135,7 +131,6 @@ export const RequestBuilder = ({
     prepareJSToUse: string = ""
   ) => {
     try {
-      // Call the native module to show the browser view
       const updatedManifest = await PlutoProver.showBrowserView(
         manifestToShow,
         prepareJSToUse
@@ -169,7 +164,6 @@ export const RequestBuilder = ({
     );
   }
 
-  // Once the browser view is shown and the callback is called, this component doesn't need to render anything
   return null;
 };
 

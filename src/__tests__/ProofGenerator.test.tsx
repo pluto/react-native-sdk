@@ -5,28 +5,21 @@ import { NativeModules } from "react-native";
 
 describe("ProofGenerator", () => {
   test("component has correct default props", () => {
-    // Mock the onProofGenerated callback
     const mockOnProofGenerated = jest.fn();
 
-    // Create a ProofGenerator component with minimum required props
     const component = (
       <ProofGenerator onProofGenerated={mockOnProofGenerated} />
     );
 
-    // Verify the component renders with the required prop
     expect(component.props.onProofGenerated).toBe(mockOnProofGenerated);
-
-    // Verify the default timeout prop value (from the component source code)
-    expect(component.props.timeout).toBeUndefined(); // It's undefined in props but has a default in the component
+    expect(component.props.timeout).toBeUndefined(); // Default value is set internally
   });
 
   test("component accepts all optional props", () => {
-    // Mock the required callbacks
     const mockOnProofGenerated = jest.fn();
     const mockOnError = jest.fn();
     const mockOnManifestConstructed = jest.fn();
 
-    // Create a component with all possible props
     const manifest: ManifestFile = {
       id: "test",
       manifestVersion: "0.1",
@@ -62,7 +55,6 @@ describe("ProofGenerator", () => {
       />
     );
 
-    // Verify all props were passed correctly
     expect(component.props.manifest).toBe(manifest);
     expect(component.props.manifestUrl).toBe(manifestUrl);
     expect(component.props.prepareJS).toBe(prepareJS);
@@ -75,15 +67,13 @@ describe("ProofGenerator", () => {
   });
 
   test("component interfaces with the NativeBridge", async () => {
-    // Verify that the PlutoProver NativeModule exists
+    /**
+     * Verifies the native bridge integration by checking:
+     * 1. The PlutoProver module is properly registered
+     * 2. Required native methods are available
+     * Note: Full integration testing would require a mock native environment
+     */
     expect(NativeModules.PlutoProver).toBeDefined();
-
-    // Verify that the generateProof method exists on the NativeModule
     expect(typeof NativeModules.PlutoProver.generateProof).toBe("function");
-
-    // Since we're not actually executing the component's functions
-    // (which would require rendering and interaction testing),
-    // we just verify that the NativeModule we depend on is properly defined
-    // and has the expected methods that our component will call.
   });
 });

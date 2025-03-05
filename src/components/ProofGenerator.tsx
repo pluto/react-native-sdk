@@ -18,12 +18,13 @@ interface ProofGeneratorProps {
   onProofGenerated: (proof: string) => void;
   onError?: (error: Error) => void;
   onManifestConstructed?: (manifest: ManifestFile) => void;
-  timeout?: number; // Add timeout prop
+  timeout?: number;
 }
 
 /**
- * ProofGenerator component
- * Combines RequestBuilder with proof generation
+ * Combines RequestBuilder with proof generation capabilities to provide
+ * a complete end-to-end proof generation flow. Handles manifest construction,
+ * user interaction, and proof generation in a single component.
  */
 export const ProofGenerator = ({
   manifest,
@@ -32,14 +33,13 @@ export const ProofGenerator = ({
   onProofGenerated,
   onError,
   onManifestConstructed,
-  timeout = 60000, // Default 60 second timeout
+  timeout = 60000,
 }: ProofGeneratorProps) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [stage, setStage] = useState<"constructing" | "generating">(
     "constructing"
   );
-
   const [constructedManifest, setConstructedManifest] =
     useState<ManifestFile | null>(null);
 
@@ -52,9 +52,7 @@ export const ProofGenerator = ({
     }
   }, []);
 
-  // Add timeout mechanism
   useEffect(() => {
-    // Set a timeout to prevent hanging indefinitely
     const timeoutId = setTimeout(() => {
       if (loading) {
         setLoading(false);
@@ -70,21 +68,17 @@ export const ProofGenerator = ({
     };
   }, [loading, onError, timeout]);
 
-  // Handle when the manifest is constructed by RequestBuilder
   const handleManifestConstructed = (newManifest: ManifestFile) => {
     setConstructedManifest(newManifest);
     setStage("generating");
 
-    // Optional callback to inform parent component about the constructed manifest
     if (onManifestConstructed) {
       onManifestConstructed(newManifest);
     }
 
-    // Start generating the proof
     generateProofInternal(newManifest);
   };
 
-  // Handle errors from RequestBuilder
   const handleRequestBuilderError = (error: Error) => {
     setError(error.message);
     setLoading(false);
@@ -94,7 +88,6 @@ export const ProofGenerator = ({
     }
   };
 
-  // Generate proof with the constructed manifest
   const generateProofInternal = async (manifest: ManifestFile) => {
     try {
       const proofResult = await PlutoProver.generateProof(manifest);
@@ -110,7 +103,6 @@ export const ProofGenerator = ({
     }
   };
 
-  // Render error state first
   if (error) {
     return (
       <View style={styles.container}>
@@ -119,7 +111,6 @@ export const ProofGenerator = ({
     );
   }
 
-  // If we're in the manifest construction stage, render the RequestBuilder
   if (stage === "constructing") {
     return (
       <RequestBuilder
@@ -133,7 +124,6 @@ export const ProofGenerator = ({
     );
   }
 
-  // If we're in the generating stage and still loading, show the generating indicator
   if (loading) {
     return (
       <View style={styles.container}>
@@ -143,7 +133,6 @@ export const ProofGenerator = ({
     );
   }
 
-  // Once the proof is generated and callback is called, component doesn't need to render anything
   return null;
 };
 

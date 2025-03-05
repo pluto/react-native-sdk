@@ -2,6 +2,12 @@ import * as React from "react";
 import { View, Text, StyleSheet, Button, SafeAreaView } from "react-native";
 import { ProofGenerator } from "pluto-react-native-lib";
 
+/**
+ * Example component demonstrating the ProofGenerator workflow:
+ * 1. User initiates proof generation
+ * 2. ProofGenerator handles manifest fetching and processing
+ * 3. Results (success/error) are displayed to the user
+ */
 export const PlutoProofGeneratorExample: React.FC = () => {
   const [proof, setProof] = React.useState<string | null>(null);
   const [error, setError] = React.useState<string | null>(null);
@@ -37,7 +43,7 @@ export const PlutoProofGeneratorExample: React.FC = () => {
             manifestUrl="https://example.com/your-manifest-url"
             onProofGenerated={handleProofGenerated}
             onError={handleError}
-            timeout={120000} // 2 minutes timeout
+            timeout={120000} // Extended timeout for complex proofs
           />
         </View>
       )}
